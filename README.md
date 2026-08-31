@@ -1,10 +1,10 @@
-# 📊 Conversational Analytics Platform
+# Conversational Analytics Platform
 
 An enterprise-grade, full-stack conversational business intelligence engine. This platform abstracts complex database querying layers by converting raw human language (e.g., **"Show me total sales for laptops in Faisalabad last month"**) into structured data models and rendering dynamic, real-time visual charts instantly.
 
 ---
 
-## 🔧 Visual System Architecture & Data Flow
+## Visual System Architecture & Data Flow
 
 ![Architecture](Assests/image.jpg)
 
@@ -20,9 +20,7 @@ An enterprise-grade, full-stack conversational business intelligence engine. Thi
 
 ---
 
-## ⚙️ How It Works — End to End
-
-
+## How It Works — End to End
 
 
 **Step 1 — User input**
@@ -50,7 +48,7 @@ The UI inspects the response keys to determine the correct chart type and mounts
 
 ---
 
-## 🗂️ Layer Component Responsibilities
+## Layer Component Responsibilities
 
 
 **Layer 1 — UI layer**
@@ -69,7 +67,7 @@ Stores all business records in a NoSQL document structure. Accepts programmatic 
 Inspects the response package keys to determine which chart component to mount. Automatically selects and renders the correct visual: bar, line, pie, scatter, KPI card, or table.
  
 ---
-## 📊 Dynamic Component Mapper
+## Dynamic Component Mapper
 
  
 When the backend response arrives, the component mapper reads its data keys and routes to the appropriate visual component:
@@ -86,13 +84,13 @@ When the backend response arrives, the component mapper reads its data keys and 
 No manual chart selection is needed. The mapping is automatic and driven entirely by the shape of the returned data.
  
 ---
-## 🏗️ Enterprise Tech Stack
+## Enterprise Tech Stack
 
 | Technology | Role | Details |
 |------------|------|---------|
-| ⚛️ **React.js** | Frontend UI | Component-driven decoupled state hooks; dynamic SVG rendering |
-| ⚡ **FastAPI** | Backend Server | Asynchronous framework deployed via Uvicorn instances |
-| 🤖 **Google Gemini Pro** | LLM Engine | Structured via strict system prompts for JSON extraction |
-| 🔥 **Firebase Firestore** | NoSQL Database | Real-time data sync with programmatic filtering |
-| 📊 **Recharts** | Data Visualization | Bar, Line, Pie, Scatter, KPI cards auto-mounted |
-| 🐍 **Python 3.12** | Backend Runtime | Isolated virtual environment; strict zero-shot mapping |
+| **React.js** | Frontend UI | Component-driven decoupled state hooks; dynamic SVG rendering |
+| **FastAPI** | Backend Server | Asynchronous framework deployed via Uvicorn instances |
+| **Google Gemini Pro** | LLM Engine | Structured via strict system prompts for JSON extraction |
+| **Firebase Firestore** | NoSQL Database | Real-time data sync with programmatic filtering |
+| **Recharts** | Data Visualization | Bar, Line, Pie, Scatter, KPI cards auto-mounted |
+| **Python 3.12** | Backend Runtime | Isolated virtual environment; strict zero-shot mapping |
