@@ -1,11 +1,5 @@
 # 📊 Conversational Analytics Platform
 
-![Backend](https://img.shields.io/badge/BACKEND-FastAPI-3fb950?style=flat-square&logo=fastapi)
-![React](https://img.shields.io/badge/FRONTEND-React-58a6ff?style=flat-square&logo=react)
-![AI Engine](https://img.shields.io/badge/AI-Gemini_API-d2a8ff?style=flat-square&logo=google)
-![Database](https://img.shields.io/badge/DATABASE-Firebase_Firestore-f85149?style=flat-square&logo=firebase)
-![Python](https://img.shields.io/badge/Python-3.12-79c0ff?style=flat-square&logo=python)
-
 An enterprise-grade, full-stack conversational business intelligence engine. This platform abstracts complex database querying layers by converting raw human language (e.g., **"Show me total sales for laptops in Faisalabad last month"**) into structured data models and rendering dynamic, real-time visual charts instantly.
 
 ---
