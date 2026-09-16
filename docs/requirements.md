@@ -726,3 +726,199 @@ The following criteria must be satisfied:
 ### Phase 1 Completion Statement
 
 Phase 1 is complete when the above requirements have been reviewed and approved as the foundation for the subsequent database schema, dataset, backend, AI, and frontend implementation phases.
+
+# Phase 2 — Questions / Use Cases Finalization
+
+## 2.1 Purpose
+
+The purpose of Phase 2 is to finalize the business questions that the Conversational Analytics Platform will support.
+
+The supported questions define what types of requests users can ask and what data fields, analytical operations, and visualization types are required to answer those questions.
+
+Phase 2 also validates that the required data fields are identified before designing the final database schema in Phase 3.
+
+---
+
+## 2.2 Supported Use Cases
+
+The platform will initially support the following 17 business analytics use cases:
+
+| #  | Use Case                                         | Required Fields                                               | Expected Output   |
+| -- | ------------------------------------------------ | ------------------------------------------------------------- | ----------------- |
+| 1  | What are the total sales?                        | `sales`                                                       | KPI               |
+| 2  | What is the total profit?                        | `profit`                                                      | KPI               |
+| 3  | What are the sales by category?                  | `category`, `sales`                                           | Bar Chart         |
+| 4  | What are the sales by region?                    | `region`, `sales`                                             | Bar Chart         |
+| 5  | What are the top 5 products by sales?            | `product`, `sales`                                            | Bar Chart / Table |
+| 6  | What is the sales trend over time?               | `order_date`, `sales`                                         | Line Chart        |
+| 7  | What are the sales for a specific city?          | `city`, `sales`                                               | KPI / Bar Chart   |
+| 8  | How many units were sold?                        | `quantity`                                                    | KPI               |
+| 9  | What are the monthly sales?                      | `order_date`, `sales`                                         | Line Chart        |
+| 10 | What are the sales within a specific date range? | `order_date`, `sales`                                         | KPI / Table       |
+| 11 | How are category sales changing over time?       | `category`, `order_date`, `sales`                             | Line Chart        |
+| 12 | Compare sales between regions.                   | `region`, `sales`                                             | Bar Chart         |
+| 13 | Which category generated the most sales?         | `category`, `sales`                                           | Bar Chart / KPI   |
+| 14 | Which category is the most profitable?           | `category`, `profit`                                          | Bar Chart / KPI   |
+| 15 | Which products have the highest sales?           | `product`, `sales`                                            | Bar Chart / Table |
+| 16 | Show all orders for a specific customer.         | `customer_name`, `order_id`, `product`, `order_date`, `sales` | Table             |
+| 17 | Show the relationship between sales and profit.  | `sales`, `profit`                                             | Scatter Plot      |
+
+---
+
+## 2.3 Supported Data Fields
+
+Based on the finalized use cases, the following fields are required for the analytics system:
+
+* `order_id`
+* `order_date`
+* `product`
+* `category`
+* `city`
+* `region`
+* `sales`
+* `quantity`
+* `unit_price`
+* `discount`
+* `profit`
+* `customer_name`
+
+These fields will be used as the basis for the database schema design in Phase 3.
+
+---
+
+## 2.4 AI Query Interpretation Requirements
+
+For each natural-language question, the AI engine must identify the relevant analytical information from the user's request.
+
+Depending on the question, this may include:
+
+* Metric, such as `sales`, `profit`, or `quantity`
+* Aggregation, such as `sum`
+* Dimension, such as `product`, `category`, `city`, or `region`
+* Date field and date range
+* Ranking requirement, such as top 5
+* Customer identifier
+* Comparison requirement
+* Relationship between numerical metrics
+* Expected visualization type
+
+The AI output must be structured and validated before it is used by the backend.
+
+---
+
+## 2.5 Analytical Operations
+
+The supported use cases require the following analytical operations:
+
+* Sum
+* Count
+* Filtering
+* Grouping
+* Sorting
+* Ranking
+* Date-range filtering
+* Time-based grouping
+* Comparison
+* Customer record lookup
+* Relationship analysis between numerical fields
+
+The backend will perform the required data operations using the actual business data stored in the database.
+
+---
+
+## 2.6 Visualization Requirements
+
+The frontend must be capable of displaying the following response types:
+
+### KPI
+
+Used for single important values such as:
+
+* Total Sales
+* Total Profit
+* Total Quantity
+
+### Bar Chart
+
+Used for category-based comparisons such as:
+
+* Sales by Category
+* Sales by Region
+* Top Products
+* Category Profitability
+
+### Line Chart
+
+Used for time-based analysis such as:
+
+* Monthly Sales
+* Sales Trend
+* Category Sales Over Time
+
+### Scatter Plot
+
+Used for relationships between numerical fields:
+
+* Sales vs Profit
+
+Each data record will represent a point using sales and profit values.
+
+### Table
+
+Used when detailed records are required, such as:
+
+* Customer order lookup
+* Detailed product/order results
+
+---
+
+## 2.7 Supported Fields Validation
+
+Each supported use case was checked against the required data fields.
+
+The validation confirms that the finalized use cases require the following core business fields:
+
+| Field           | Required By                                                                            |
+| --------------- | -------------------------------------------------------------------------------------- |
+| `order_id`      | Customer order lookup                                                                  |
+| `order_date`    | Monthly sales, sales trend, date-range analysis, category trend, customer order lookup |
+| `product`       | Product-based analysis and ranking                                                     |
+| `category`      | Category analysis and profitability                                                    |
+| `city`          | City-based sales analysis                                                              |
+| `region`        | Regional analysis and comparison                                                       |
+| `sales`         | Sales-related analytics                                                                |
+| `quantity`      | Quantity analysis                                                                      |
+| `unit_price`    | Business transaction data                                                              |
+| `discount`      | Business transaction data                                                              |
+| `profit`        | Profit analysis and sales-profit relationship                                          |
+| `customer_name` | Customer order lookup                                                                  |
+
+The validation identified `order_date` as an essential field because multiple approved use cases require time-based analysis.
+
+---
+
+## 2.8 Scope Control
+
+Only the approved 17 use cases listed in this document are included in the initial project scope.
+
+Additional features such as Average Order Value, Bottom 5 Products, or other new analytical questions are not part of the initial Phase 2 scope.
+
+Such features may be considered as future enhancements after the initial platform has been implemented and tested.
+
+---
+
+## 2.9 Phase 2 Acceptance Criteria
+
+Phase 2 will be considered complete when:
+
+* [x] The initial 17 supported business questions are finalized.
+* [x] Required fields for each use case are identified.
+* [x] Required analytical operations are identified.
+* [x] Expected visualization types are identified.
+* [x] Time-based use cases include the required `order_date` field.
+* [x] Sales and profit metrics are clearly separated where required.
+* [x] Customer lookup requirements are identified.
+* [x] Required database fields for Phase 3 are identified.
+* [x] Initial scope is controlled and unapproved use cases are excluded.
+
+**Phase 2 Status: COMPLETE**
