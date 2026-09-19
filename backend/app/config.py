@@ -10,7 +10,8 @@ import os
 from dotenv import load_dotenv
 
 # Load backend/.env regardless of the current working directory
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# (this file is at backend/app/config.py, so two levels up is backend/)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 

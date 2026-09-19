@@ -35,7 +35,7 @@ class QueryParams(BaseModel):
 
     metric: Optional[Literal["sales", "profit", "quantity"]] = None
     aggregation: Optional[Literal["sum", "count", "average"]] = None
-    group_by: Optional[Literal["category", "region", "city", "month", "none"]] = "none"
+    group_by: Optional[Literal["category", "region", "city", "product", "month", "none"]] = "none"
 
     filters: QueryFilters = QueryFilters()
 

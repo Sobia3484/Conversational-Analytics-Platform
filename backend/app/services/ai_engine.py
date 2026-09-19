@@ -16,7 +16,7 @@ from app.models.ai_schemas import QueryParams
 
 # Model choice: gemini-2.5-flash is fast and inexpensive, well suited for
 # this kind of short structured-extraction task.
-MODEL_NAME = "gemini-2.5-flash"
+MODEL_NAME = "gemini-3.6-flash"
 
 SYSTEM_PROMPT = """
 You are the AI query interpreter for a Conversational Analytics Platform
@@ -42,6 +42,11 @@ Valid region values: "Central", "East", "South", "West"
   orders for customer X", "orders in New York last week").
 - "correlation": the question asks about the relationship between two
   numeric fields (e.g. "sales vs profit").
+
+  ## group_by rules
+Valid group_by values: "category", "region", "city", "product", "month", "none".
+Use "product" whenever the question ranks or compares individual products
+(e.g. "top 5 products by sales", "which product sold the most").
 
 ## Scope rules (IMPORTANT)
 Set is_supported to false, and fill rejection_reason with one plain
