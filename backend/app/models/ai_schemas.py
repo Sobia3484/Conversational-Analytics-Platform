@@ -11,13 +11,17 @@ Phase 2 use cases:
 """
 
 from pydantic import BaseModel
-from typing import Optional, Literal
+from typing import Optional, Literal, List
 
 
 class QueryFilters(BaseModel):
-    category: Optional[str] = None       # "Office Supplies" | "Furniture" | "Technology"
+    # A list so a question naming specific values (e.g. "compare Furniture
+    # and Technology") can filter to exactly those, instead of falling
+    # back to a full breakdown of every category/region. A single-value
+    # question (e.g. "sales in the West region") is just a list of one.
+    category: Optional[List[str]] = None   # e.g. ["Office Supplies"], ["Furniture", "Technology"]
     city: Optional[str] = None
-    region: Optional[str] = None         # "Central" | "East" | "South" | "West"
+    region: Optional[List[str]] = None     # e.g. ["East"], ["East", "West"]
     customer_name: Optional[str] = None
     start_date: Optional[str] = None     # "YYYY-MM-DD"
     end_date: Optional[str] = None       # "YYYY-MM-DD"

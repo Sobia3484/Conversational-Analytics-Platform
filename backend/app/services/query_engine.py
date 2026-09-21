@@ -46,17 +46,19 @@ def _build_where_clause(filters: QueryFilters):
     values = []
 
     if filters.category:
-        clauses.append("category = ?")
-        values.append(filters.category)
+        placeholders = ", ".join("?" for _ in filters.category)
+        clauses.append(f"category IN ({placeholders})")
+        values.extend(filters.category)
     if filters.city:
-        clauses.append("city = ?")
-        values.append(filters.city)
+        clauses.append("city LIKE ?")
+        values.append(f"%{filters.city}%")
     if filters.region:
-        clauses.append("region = ?")
-        values.append(filters.region)
+        placeholders = ", ".join("?" for _ in filters.region)
+        clauses.append(f"region IN ({placeholders})")
+        values.extend(filters.region)
     if filters.customer_name:
-        clauses.append("customer_name = ?")
-        values.append(filters.customer_name)
+        clauses.append("customer_name LIKE ?")
+        values.append(f"%{filters.customer_name}%")
     if filters.start_date:
         clauses.append("order_date >= ?")
         values.append(filters.start_date)
@@ -145,7 +147,11 @@ if __name__ == "__main__":
                     correlation_metric="profit", chart_type="scatter"),
         QueryParams(is_supported=True, query_type="aggregate", metric="sales",
                     aggregation="sum", group_by="category",
-                    filters=QueryFilters(region="West"), chart_type="bar"),
+                    filters=QueryFilters(region=["West"]), chart_type="bar"),
+        QueryParams(is_supported=True, query_type="aggregate", metric="sales",
+                    aggregation="sum", group_by="category",
+                    filters=QueryFilters(category=["Furniture", "Technology"]),
+                    chart_type="bar"),
     ]
 
     for i, tc in enumerate(test_cases, 1):
