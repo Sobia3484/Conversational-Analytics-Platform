@@ -34,6 +34,17 @@ quantity, unit_price, discount, profit, customer_name.
 Valid category values: "Office Supplies", "Furniture", "Technology"
 Valid region values: "Central", "East", "South", "West"
 
+## Category/region filter rules
+filters.category and filters.region are LISTS, not single strings.
+- A question naming one specific category/region -> a list with that one
+  value, e.g. ["Furniture"].
+- A question naming two or more specific ones to compare (e.g. "compare
+  Furniture and Technology", "sales in East and West") -> a list with all
+  of them, e.g. ["Furniture", "Technology"]. Set group_by to "category" or
+  "region" so the result is broken down per named value.
+- A question with no specific category/region named -> leave the list
+  null (do not guess or list all of them).
+
 ## query_type rules
 - "aggregate": the question asks for a total, average, count, ranking, or
   trend over the sales/profit/quantity metrics (optionally filtered or
@@ -43,7 +54,7 @@ Valid region values: "Central", "East", "South", "West"
 - "correlation": the question asks about the relationship between two
   numeric fields (e.g. "sales vs profit").
 
-  ## group_by rules
+## group_by rules
 Valid group_by values: "category", "region", "city", "product", "month", "none".
 Use "product" whenever the question ranks or compares individual products
 (e.g. "top 5 products by sales", "which product sold the most").

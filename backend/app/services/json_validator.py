@@ -63,27 +63,33 @@ def validate_query_params(params: QueryParams) -> QueryParams:
     errors = []
     filters = params.filters
 
-    # --- Normalize + validate category ---
+    # --- Normalize + validate category (now a list) ---
     if filters.category:
-        key = filters.category.strip().lower()
-        if key not in VALID_CATEGORIES:
-            errors.append(
-                f"Unknown category '{filters.category}'. "
-                f"Valid categories: {', '.join(VALID_CATEGORIES.values())}."
-            )
-        else:
-            filters.category = VALID_CATEGORIES[key]
+        normalized = []
+        for cat in filters.category:
+            key = cat.strip().lower()
+            if key not in VALID_CATEGORIES:
+                errors.append(
+                    f"Unknown category '{cat}'. "
+                    f"Valid categories: {', '.join(VALID_CATEGORIES.values())}."
+                )
+            else:
+                normalized.append(VALID_CATEGORIES[key])
+        filters.category = normalized
 
-    # --- Normalize + validate region ---
+    # --- Normalize + validate region (now a list) ---
     if filters.region:
-        key = filters.region.strip().lower()
-        if key not in VALID_REGIONS:
-            errors.append(
-                f"Unknown region '{filters.region}'. "
-                f"Valid regions: {', '.join(VALID_REGIONS.values())}."
-            )
-        else:
-            filters.region = VALID_REGIONS[key]
+        normalized = []
+        for reg in filters.region:
+            key = reg.strip().lower()
+            if key not in VALID_REGIONS:
+                errors.append(
+                    f"Unknown region '{reg}'. "
+                    f"Valid regions: {', '.join(VALID_REGIONS.values())}."
+                )
+            else:
+                normalized.append(VALID_REGIONS[key])
+        filters.region = normalized
 
     # --- Validate dates ---
     if filters.start_date:
@@ -131,17 +137,17 @@ if __name__ == "__main__":
     valid = QueryParams(
         is_supported=True, query_type="aggregate", metric="sales",
         aggregation="sum", group_by="category",
-        filters=QueryFilters(category="technology"),  # lowercase on purpose
+        filters=QueryFilters(category=["technology"]),  # lowercase on purpose
         chart_type="bar",
     )
     result = validate_query_params(valid)
-    print("Normalized category:", result.filters.category)  # should be "Technology"
+    print("Normalized category:", result.filters.category)  # should be ["Technology"]
 
     print("\n--- Invalid category ---")
     try:
         bad_category = QueryParams(
             is_supported=True, query_type="aggregate", metric="sales",
-            filters=QueryFilters(category="Electronics"), chart_type="bar",
+            filters=QueryFilters(category=["Electronics"]), chart_type="bar",
         )
         validate_query_params(bad_category)
     except ValidationError as e:
