@@ -52,20 +52,25 @@ def build_response(params: QueryParams, rows: list[dict]) -> QueryResponse:
     if params.query_type == "correlation":
         return QueryResponse(response_type="correlation_data", data=rows)
 
-    # --- Aggregate: shape depends on whether it was grouped ---
+    # --- Aggregate: shape depends on whether/how it was grouped ---
     if params.query_type == "aggregate":
+        group_dims = list(params.group_by or [])
+
         # Ungrouped aggregate (e.g. "total sales") -> single KPI value
-        if params.group_by in (None, "none"):
+        if not group_dims:
             value = rows[0].get("value")
             if value is None:
                 return QueryResponse(response_type="aggregate_data", data=None, message=NO_DATA_MESSAGE)
             return QueryResponse(response_type="aggregate_data", data={"value": value})
 
-        # Grouped by month -> time trend -> line chart
-        if params.group_by == "month":
+        # "month" involved (alone or combined with another dimension) ->
+        # time trend -> line chart. When combined (e.g. month+category),
+        # each row also carries a "series_label" for a multi-line chart.
+        if "month" in group_dims:
             return QueryResponse(response_type="trend_data", data=rows)
 
-        # Grouped by category/region/city/product -> comparison -> bar/pie chart
+        # Grouped by category/region/city/product (no time dimension) ->
+        # comparison -> bar/pie chart
         return QueryResponse(response_type="category_data", data=rows)
 
     # Should not happen if Phase 11 validation ran first, but fail safely
@@ -82,16 +87,19 @@ if __name__ == "__main__":
 
     test_cases = [
         QueryParams(is_supported=True, query_type="aggregate", metric="sales",
-                    aggregation="sum", group_by="none", chart_type="kpi"),
+                    aggregation="sum", group_by=None, chart_type="kpi"),
         QueryParams(is_supported=True, query_type="aggregate", metric="sales",
-                    aggregation="sum", group_by="category", chart_type="bar"),
+                    aggregation="sum", group_by=["category"], chart_type="bar"),
         QueryParams(is_supported=True, query_type="lookup",
                     filters=QueryFilters(customer_name="Darren Powers"),
                     limit=3, chart_type="table"),
         # Deliberately impossible filter -> should trigger "no data" path
         QueryParams(is_supported=True, query_type="aggregate", metric="sales",
-                    aggregation="sum", group_by="none",
+                    aggregation="sum", group_by=None,
                     filters=QueryFilters(city="Atlantis"), chart_type="kpi"),
+        # New: 2-dimension grouping (category sales trend over time)
+        QueryParams(is_supported=True, query_type="aggregate", metric="sales",
+                    aggregation="sum", group_by=["month", "category"], chart_type="line"),
     ]
 
     for i, tc in enumerate(test_cases, 1):

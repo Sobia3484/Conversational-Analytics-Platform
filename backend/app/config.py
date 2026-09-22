@@ -1,6 +1,6 @@
 """
 Phase 9 — Backend Foundation
-Loads environment variables (e.g. GEMINI_API_KEY, added in Phase 10) from
+Loads environment variables (e.g. GROQ_API_KEY, added in Phase 10) from
 backend/.env so the rest of the app can read them via `settings`.
 
 Requires: python-dotenv (add to backend/requirements.txt)
@@ -16,7 +16,7 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 
 class Settings:
-    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
+    GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")
     APP_NAME: str = "Conversational Analytics Platform"
     DEBUG: bool = os.getenv("DEBUG", "true").lower() == "true"
 
