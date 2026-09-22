@@ -74,20 +74,41 @@ def _run_aggregate(cursor, params: QueryParams) -> list[dict]:
     metric_col = METRIC_COLUMN[params.metric]
     agg_func = AGG_FUNC[params.aggregation or "sum"]
     where_sql, where_values = _build_where_clause(params.filters)
-    group_col = GROUP_BY_COLUMN.get(params.group_by)  # None for "none"/null
 
-    if group_col:
-        sql = (
-            f"SELECT {group_col} AS group_label, "
-            f"{agg_func}({metric_col}) AS value "
-            f"FROM sales {where_sql} GROUP BY {group_col}"
-        )
-        if params.order:
-            sql += f" ORDER BY value {params.order.upper()}"
-        if params.limit:
-            sql += f" LIMIT {int(params.limit)}"
-    else:
+    group_dims = list(params.group_by or [])
+    # If "month" is one of the dimensions, put it first so it naturally
+    # reads as group_label (x-axis / time), with the other dimension (if
+    # any) as series_label — matching how a "trend by X" chart is drawn.
+    group_dims.sort(key=lambda g: 0 if g == "month" else 1)
+    group_cols = [GROUP_BY_COLUMN[g] for g in group_dims]
+
+    if not group_cols:
         sql = f"SELECT {agg_func}({metric_col}) AS value FROM sales {where_sql}"
+        cursor.execute(sql, where_values)
+        return [dict(row) for row in cursor.fetchall()]
+
+    if len(group_cols) == 1:
+        select_cols = f"{group_cols[0]} AS group_label"
+        group_by_sql = group_cols[0]
+    else:
+        # Exactly 2 dimensions supported (e.g. month + category).
+        select_cols = f"{group_cols[0]} AS group_label, {group_cols[1]} AS series_label"
+        group_by_sql = f"{group_cols[0]}, {group_cols[1]}"
+
+    sql = f"SELECT {select_cols}, {agg_func}({metric_col}) AS value FROM sales {where_sql} GROUP BY {group_by_sql}"
+
+    if "month" in group_dims:
+        # A trend/time chart must always read chronologically — sorting by
+        # value here would scramble the timeline, so ignore params.order
+        # (which is meant for rankings, not time series) and sort by the
+        # month itself instead. strftime('%Y-%m', ...) sorts correctly as
+        # plain text since it's zero-padded (e.g. "2025-03" < "2025-11").
+        sql += " ORDER BY group_label ASC"
+    elif params.order:
+        sql += f" ORDER BY value {params.order.upper()}"
+
+    if params.limit:
+        sql += f" LIMIT {int(params.limit)}"
 
     cursor.execute(sql, where_values)
     return [dict(row) for row in cursor.fetchall()]
@@ -136,9 +157,9 @@ if __name__ == "__main__":
 
     test_cases = [
         QueryParams(is_supported=True, query_type="aggregate", metric="sales",
-                    aggregation="sum", group_by="none", chart_type="kpi"),
+                    aggregation="sum", group_by=None, chart_type="kpi"),
         QueryParams(is_supported=True, query_type="aggregate", metric="sales",
-                    aggregation="sum", group_by="product", order="desc",
+                    aggregation="sum", group_by=["product"], order="desc",
                     limit=5, chart_type="bar"),
         QueryParams(is_supported=True, query_type="lookup",
                     filters=QueryFilters(customer_name="Darren Powers"),
@@ -146,12 +167,16 @@ if __name__ == "__main__":
         QueryParams(is_supported=True, query_type="correlation", metric="sales",
                     correlation_metric="profit", chart_type="scatter"),
         QueryParams(is_supported=True, query_type="aggregate", metric="sales",
-                    aggregation="sum", group_by="category",
+                    aggregation="sum", group_by=["category"],
                     filters=QueryFilters(region=["West"]), chart_type="bar"),
         QueryParams(is_supported=True, query_type="aggregate", metric="sales",
-                    aggregation="sum", group_by="category",
+                    aggregation="sum", group_by=["category"],
                     filters=QueryFilters(category=["Furniture", "Technology"]),
                     chart_type="bar"),
+        # New: 2-dimension grouping (category sales trend over time)
+        QueryParams(is_supported=True, query_type="aggregate", metric="sales",
+                    aggregation="sum", group_by=["month", "category"],
+                    chart_type="line"),
     ]
 
     for i, tc in enumerate(test_cases, 1):

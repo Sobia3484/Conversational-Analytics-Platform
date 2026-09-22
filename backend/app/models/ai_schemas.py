@@ -39,7 +39,11 @@ class QueryParams(BaseModel):
 
     metric: Optional[Literal["sales", "profit", "quantity"]] = None
     aggregation: Optional[Literal["sum", "count", "average"]] = None
-    group_by: Optional[Literal["category", "region", "city", "product", "month", "none"]] = "none"
+    # A list so a question can be grouped by up to 2 dimensions at once
+    # (e.g. ["category", "month"] for "category sales trend over time").
+    # Most questions need just one, e.g. ["category"]. Null/empty means no
+    # grouping (a single overall KPI value).
+    group_by: Optional[List[Literal["category", "region", "city", "product", "month"]]] = None
 
     filters: QueryFilters = QueryFilters()
 
