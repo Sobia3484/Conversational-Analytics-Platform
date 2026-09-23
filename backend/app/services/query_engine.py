@@ -184,3 +184,4 @@ if __name__ == "__main__":
         result = run_query(tc)
         print(json.dumps(result[:5], indent=2))  # print first 5 rows only
         print(f"({len(result)} total row(s))")
+        
