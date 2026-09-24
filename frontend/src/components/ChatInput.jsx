@@ -1,47 +1,24 @@
 import { useState } from "react";
 
-/**
- * Phase 15 — Chat UI
- * Text input + send button for asking a question. Submits on Enter
- * (Shift+Enter for a newline) or the Send button. Disabled while a
- * request is in flight (wired up properly in Phase 16).
- */
-export default function ChatInput({ onSend, disabled }) {
+export default function ChatInput({ onSend, disabled = false, compact = false }) {
   const [value, setValue] = useState("");
-
   const submit = () => {
     const question = value.trim();
     if (!question || disabled) return;
     onSend(question);
     setValue("");
   };
-
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
       submit();
     }
   };
-
   return (
-    <div className="chat-input">
-      <textarea
-        className="chat-input__field"
-        placeholder="Ask about your sales data — e.g. “Show top 5 products by sales”"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onKeyDown={handleKeyDown}
-        disabled={disabled}
-        rows={1}
-      />
-      <button
-        className="chat-input__send"
-        onClick={submit}
-        disabled={disabled || !value.trim()}
-        aria-label="Send question"
-      >
-        Ask
-      </button>
+    <div className={`chat-input ${compact ? "chat-input--compact" : ""}`}>
+      <span className="chat-input__spark">⌕</span>
+      <textarea rows={1} value={value} disabled={disabled} onChange={(e) => setValue(e.target.value)} onKeyDown={handleKeyDown} placeholder="Ask a business question..." aria-label="Ask a business question" />
+      <button className="send-button" onClick={submit} disabled={disabled || !value.trim()} aria-label="Send question">➤</button>
     </div>
   );
 }
