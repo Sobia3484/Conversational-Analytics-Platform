@@ -1,4 +1,4 @@
-# Conversational Analytics Platform
+# Conversational Analytics Platform 
 ## Overview
 
 Conversational Analytics Platform is a business analytics platform that allows users to ask business questions in natural language and receive clear, easy-to-understand analytical results.
@@ -7,7 +7,7 @@ Instead of manually searching through business data, users can simply ask questi
 
 The platform presents the results through simple visualizations such as charts, tables, and key performance indicators.
 
-##Workflow Diagram
+## Workflow Diagram
 
 ![Conversational Analytics Platform Diagram](docs/architecture-diagram.png)
 
