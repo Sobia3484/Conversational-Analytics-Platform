@@ -17,6 +17,14 @@ function compactMoney(value) {
   return money(number);
 }
 
+function normalizeRows(data) {
+  if (Array.isArray(data)) return data;
+  if (data && typeof data === "object") {
+    return Object.entries(data).map(([group_label, value]) => ({ group_label, value }));
+  }
+  return [];
+}
+
 function ResultShell({ title, subtitle, children, className = "" }) {
   return (
     <section className={`result-card ${className}`}>
@@ -42,14 +50,14 @@ function MoneyTooltip({ active, payload, label }) {
 }
 
 export function BarResult({ result, title = "Sales by category", subtitle = "Contribution by group" }) {
-  const rows = Array.isArray(result?.data) ? result.data : [];
+  const rows = normalizeRows(result?.data);
   return (
     <ResultShell title={title} subtitle={subtitle}>
       <div className="chart-wrap">
         <ResponsiveContainer width="100%" height={235}>
           <BarChart data={rows} margin={{ top: 10, right: 12, left: 0, bottom: 8 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="group_label" tickLine={false} axisLine={false} />
+            <XAxis dataKey="group_label" interval={0} tickLine={false} axisLine={false} tickMargin={8} tick={{ fontSize: 10 }} />
             <YAxis tickLine={false} axisLine={false} tickFormatter={compactMoney} />
             <Tooltip content={<MoneyTooltip />} />
             <Bar dataKey="value" fill="#2F6BFF" radius={[7, 7, 0, 0]} />
@@ -61,14 +69,14 @@ export function BarResult({ result, title = "Sales by category", subtitle = "Con
 }
 
 export function TrendResult({ result }) {
-  const rows = Array.isArray(result?.data) ? result.data : [];
+  const rows = normalizeRows(result?.data);
   return (
     <ResultShell title="Sales over time" subtitle="Monthly business trend">
       <div className="chart-wrap">
         <ResponsiveContainer width="100%" height={235}>
           <LineChart data={rows} margin={{ top: 10, right: 12, left: 0, bottom: 8 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="month" tickLine={false} axisLine={false} />
+            <XAxis dataKey="group_label" tickLine={false} axisLine={false} />
             <YAxis tickLine={false} axisLine={false} tickFormatter={compactMoney} />
             <Tooltip content={<MoneyTooltip />} />
             <Line type="monotone" dataKey="value" stroke="#2F6BFF" strokeWidth={3} dot={false} activeDot={{ r: 5 }} />
@@ -101,7 +109,7 @@ export function CorrelationResult({ result }) {
 }
 
 export function PieResult({ result }) {
-  const rows = Array.isArray(result?.data) ? result.data : [];
+  const rows = normalizeRows(result?.data);
   return (
     <ResultShell title="Sales by category (share)" subtitle="Category contribution">
       <div className="chart-wrap chart-wrap--small">
@@ -120,7 +128,7 @@ export function PieResult({ result }) {
 }
 
 export function ProductResult({ result }) {
-  const rows = Array.isArray(result?.data) ? result.data.slice(0, 5) : [];
+  const rows = normalizeRows(result?.data).slice(0, 5);
   return (
     <ResultShell title="Top products by sales" subtitle="Highest-selling products">
       <div className="product-list">
@@ -160,6 +168,8 @@ export default function ResultRenderer({ result }) {
   if (type === "category_data") return <BarResult result={result} />;
   if (type === "trend_data") return <TrendResult result={result} />;
   if (type === "correlation_data") return <CorrelationResult result={result} />;
+  if (type === "category_share") return <PieResult result={result} />;
+  if (type === "product_data") return <ProductResult result={result} />;
 
   if (type === "list_query") {
     const rows = Array.isArray(data) ? data : [];

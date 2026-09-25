@@ -12,7 +12,7 @@ Then open http://127.0.0.1:8000/docs for the interactive Swagger UI.
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import query
+from app.routers import query, dashboard
 from app.config import settings
 
 app = FastAPI(title=settings.APP_NAME)
@@ -29,6 +29,7 @@ app.add_middleware(
 )
 
 app.include_router(query.router)
+app.include_router(dashboard.router)
 
 
 @app.get("/")
