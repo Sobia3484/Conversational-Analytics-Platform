@@ -1,23 +1,4 @@
 # Conversational Analytics Platform
-
-## Diagram
-
-![Conversational Analytics Platform Diagram](docs/architecture-diagram.png)
-
-## Demo Link
-
-[Live Demo](YOUR_DEMO_LINK_HERE)
-
-## Screenshots
-
-### Dashboard
-
-![Dashboard Screenshot](Assests/dashboard.png)
-
-### Analytics Result
-
-![Analytics Result Screenshot](Assests/analytics-result.png)
-
 ## Overview
 
 Conversational Analytics Platform is a business analytics platform that allows users to ask business questions in natural language and receive clear, easy-to-understand analytical results.
@@ -26,20 +7,19 @@ Instead of manually searching through business data, users can simply ask questi
 
 The platform presents the results through simple visualizations such as charts, tables, and key performance indicators.
 
+##Workflow Diagram
+
+![Conversational Analytics Platform Diagram](docs/architecture-diagram.png)
+
+## Demo Link
+
+[Live Demo](YOUR_DEMO_LINK_HERE)
+
 ## Aim
 
 The aim of the Conversational Analytics Platform is to make business data easier to understand and explore.
 
 It helps users interact with business information through natural language and quickly understand important sales and performance insights.
-
-## Benefits
-
-- Makes business data easier to understand.
-- Allows users to ask questions in natural language.
-- Reduces the need for manual data analysis.
-- Provides clear visual representations of business information.
-- Helps users understand sales and profit performance.
-- Makes business insights easier and faster to access.
 
 ## Key Features
 
@@ -56,3 +36,24 @@ It helps users interact with business information through natural language and q
 - KPI results.
 - Interactive charts.
 - Tables for detailed results.
+  
+## Screenshots
+
+### Dashboard
+
+![Dashboard Screenshot](Assests/dashboard.png)
+
+### Analytics Result
+
+![Analytics Result Screenshot](Assests/analytics-result.png)
+
+
+## Benefits
+
+- Makes business data easier to understand.
+- Allows users to ask questions in natural language.
+- Reduces the need for manual data analysis.
+- Provides clear visual representations of business information.
+- Helps users understand sales and profit performance.
+- Makes business insights easier and faster to access.
+
