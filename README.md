@@ -13,7 +13,7 @@ The platform presents the results through simple visualizations such as charts, 
 
 ## Demo Link
 
-[Live Demo](YOUR_DEMO_LINK_HERE)
+[Live Demo](https://conversational-analytics-platform.vercel.app/)
 
 ## Aim
 
